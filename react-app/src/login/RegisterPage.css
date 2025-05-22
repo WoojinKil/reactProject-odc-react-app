@@ -1,0 +1,128 @@
+/* 전체 폼 테이블 */
+.register-dual-table {
+  width: 100%;
+  max-width: 900px;
+  margin: 40px auto;
+  border-collapse: collapse;
+  background-color: #fff;
+  font-size: 14px;
+}
+
+/* 제목 열 (이름, 아이디 등) */
+.register-dual-table th {
+  width: 120px;
+  padding: 10px 12px;
+  background-color: transparent !important;
+  color: #333;
+  text-align: left;
+  vertical-align: top;
+  font-weight: bold;
+  border-bottom: 1px solid #e0e0e0;
+}
+.register-dual-table th,
+.register-dual-table td {
+  border: none !important;
+}
+.address-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.address-group input {
+  min-width: 200px;
+  max-width: 300px;
+  flex: 1;
+}
+
+.address-group button {
+  white-space: nowrap;
+}
+/* 입력 열 */
+.register-dual-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eaeaea;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* input 스타일 */
+.register-dual-table input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 100px;
+  max-width: 280px;
+}
+
+/* readOnly input */
+.register-dual-table input[readonly] {
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+}
+
+/* select (콤보박스) */
+.register-dual-table select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 200px;
+  border: 1px solid #ccc;
+}
+
+/* 버튼 스타일 */
+.register-dual-table button {
+  padding: 8px 14px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-size: 13px;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.register-dual-table button:hover {
+  background-color: #0056b3;
+}
+
+/* 필수 항목 * 표시 */
+.required {
+  color: red;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+/* 에러 메시지 */
+.error {
+  width: 100%;
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 폼 하단 제출 버튼 */
+.submit-btn-wrap {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.submit-btn-wrap button {
+  padding: 12px 40px;
+  font-size: 16px;
+  background-color: #28a745;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.submit-btn-wrap button:hover {
+  background-color: #1e7e34;
+}
