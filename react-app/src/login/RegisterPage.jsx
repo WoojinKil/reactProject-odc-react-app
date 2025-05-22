@@ -51,19 +51,40 @@ function RegisterPage() {
     const res = await axios.get(`/api/check-id?userId=${form.userId}`);
     alert(res.data.available ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다.");
   };
-
-	// 인증코드 요청
-	const sendEmailCode = async () => {
+  
+	// 이메일 중복체크
+  const checkDupEmail = async () => {
 	  try {
-	    const res = await axios.post("/api/join/sendEmailCode", {
+		  //인증코드 하기전에 중복체크 
+	    const res = await axios.post("/api/join/selectEmailDupCheck", {
 	      email: form.email
 	    });
-	    alert(res.data.message);
+	    if(res.data.result === 'S') {
+		  if(res.data.emailDupCheck === 'D') {
+			  alert("중복된 이메일입니다.");
+		  }else {
+			 sendEmailCode();
+		  }
+		}
 	  } catch (err) {
 	    alert(err.response.data.message || "오류가 발생했습니다.");
 	  }
-	};
-
+  };
+  const sendEmailCode = async() => {
+	 try {
+		  //인증코드 하기전에 중복체크 
+	    const res = await axios.post("/join/sendEmailCode", {
+	      email: form.email
+	    });
+	    if(res.data.result == "S") {
+		  
+		 
+		}
+	  } catch (err) {
+	    alert(err.response.data.message || "오류가 발생했습니다.");
+	  }
+  }
+	
   // 이메일 인증 확인
   const verifyEmailCode = async () => {
     const res = await axios.post("//verify-code", {
@@ -153,7 +174,7 @@ function RegisterPage() {
 	        <th><span className="required">*</span>이메일</th>
 	        <td>
 	          <input  name="email" value={form.email} onChange={handleChange} readOnly={emailVerified}/>
-	          <button type="button" onClick={sendEmailCode}>인증요청</button>
+	          <button type="button" onClick={checkDupEmail}>인증요청</button>
 	          {emailVerified && <span className="verified">✔ 인증 완료</span>}
 	        </td>
 	        <th><span className="required">*</span>인증코드</th>
