@@ -73,7 +73,7 @@ function RegisterPage() {
   const sendEmailCode = async() => {
 	 try {
 		  //인증코드 하기전에 중복체크 
-	    const res = await axios.post("/join/sendEmailCode", {
+	    const res = await axios.post("/api/join/sendEmailCode", {
 	      email: form.email
 	    });
 	    if(res.data.result == "S") {
