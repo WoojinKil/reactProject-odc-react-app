@@ -87,11 +87,11 @@ function RegisterPage() {
 	
   // 이메일 인증 확인
   const verifyEmailCode = async () => {
-    const res = await axios.post("//verify-code", {
+    const res = await axios.post("/api/join/selectVerifyEmailCode", {
       email: form.email,
       code: form.emailCode,
     });
-    if (res.data.verified) {
+    if (res.data.currectResult === "S") {
       setEmailVerified(true);
       alert("이메일 인증이 완료되었습니다.");
     } else {
@@ -180,8 +180,7 @@ function RegisterPage() {
 	        <th><span className="required">*</span>인증코드</th>
 	        <td>
 	          <input name="emailCode" value={form.emailCode} onChange={handleChange} />
-	          <button type="button" onClick={verifyEmailCode}>인증확인</button>
-	          {errors.emailCode && <p className="error">{errors.emailCode}</p>}
+	          <button type="button" onClick={verifyEmailCode} disabled={emailVerified}>인증확인</button>
 	        </td>
 	      </tr>
 	      <tr>
