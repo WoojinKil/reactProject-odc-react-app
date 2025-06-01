@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./RegisterPage.css";
-
+import { useNavigate } from 'react-router-dom';
 function RegisterPage() {
   const [form, setForm] = useState({
     userName: "",
@@ -18,7 +18,8 @@ function RegisterPage() {
   const [errors, setErrors] = useState({});
   const [emailSent, setEmailSent] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
-
+  const [idVerified, setIdVerified] = useState(false);
+  const navigate = useNavigate();
   // 값 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,11 +47,7 @@ function RegisterPage() {
     return true;
   };
 
-  // 아이디 중복 확인
-  const checkUserId = async () => {
-    const res = await axios.get(`/api/check-id?userId=${form.userId}`);
-    alert(res.data.available ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다.");
-  };
+
   
 	// 이메일 중복체크
   const checkDupEmail = async () => {
@@ -64,6 +61,26 @@ function RegisterPage() {
 			  alert("중복된 이메일입니다.");
 		  }else {
 			 sendEmailCode();
+		  }
+		}
+	  } catch (err) {
+	    alert(err.response.data.message || "오류가 발생했습니다.");
+	  }
+  };
+  
+  	// 아이디 중복체크
+  const checkDupId = async () => {
+	  try {
+		  
+	    const res = await axios.post("/api/join/selectIdDupCheck", {
+	      email: form.userId
+	    });
+	    if(res.data.result === 'S') {
+		  if(res.data.idDupCheck === 'D') {
+			  alert("중복된 아이디입니다.");
+		  }else if (res.data.idDupCheck === 'N') {
+			  alert("사용가능한 아이디입니다.");
+			  setIdVerified(true);
 		  }
 		}
 	  } catch (err) {
@@ -103,6 +120,11 @@ function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    
+    if (!idVerified) {
+      alert("아이디 중복확인을 완료해주세요.");
+      return;
+    }
 
     if (!emailVerified) {
       alert("이메일 인증을 완료해주세요.");
@@ -152,8 +174,8 @@ function RegisterPage() {
 
 	        <th><span className="required">*</span>아이디</th>
 	        <td>
-	          <input name="userId" value={form.userId} onChange={handleChange} />
-	          <button type="button" onClick={checkUserId}>중복확인</button>
+	          <input name="userId" value={form.userId} disabled={idVerified} onChange={handleChange} />
+	          <button type="button" onClick={checkDupId} disabled={idVerified}>{idVerified ? "중복확인 완료" : "중복확인"}</button>
 	          {errors.userId && <p className="error">{errors.userId}</p>}
 	        </td>
 	      </tr>
@@ -180,7 +202,7 @@ function RegisterPage() {
 	        <th><span className="required">*</span>인증코드</th>
 	        <td>
 	          <input name="emailCode" value={form.emailCode} onChange={handleChange} />
-	          <button type="button" onClick={verifyEmailCode} disabled={emailVerified}>인증확인</button>
+	          <button type="button" onClick={verifyEmailCode} disabled={emailVerified}>{emailVerified ? "인증확인 완료" : "인증확인"}</button>
 	        </td>
 	      </tr>
 	      <tr>
@@ -226,7 +248,10 @@ function RegisterPage() {
 	  </table>
 	
 	  <div className="submit-btn-wrap">
+	    
 	    <button type="submit">가입하기</button>
+	    <button type="button"    onClick={() => navigate('/login')} className="back-login-btn"> 로그인 화면으로 돌아가기
+        </button>
 	  </div>
 	</form>
 
