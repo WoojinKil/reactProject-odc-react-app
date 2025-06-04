@@ -4,15 +4,16 @@ import "./RegisterPage.css";
 import { useNavigate } from 'react-router-dom';
 function RegisterPage() {
   const [form, setForm] = useState({
-    userName: "",
-    userId: "",
-    password: "",
+    usrNm: "",
+    lgnId: "",
+    pwd: "",
     confirmPassword: "",
     email: "",
     emailCode: "",
-    phoneNumber: "",
+    phone: "",
     address: "",
     roleType: "",
+    addressDetail :""
   });
 
   const [errors, setErrors] = useState({});
@@ -28,15 +29,15 @@ function RegisterPage() {
 
   // 유효성 검사
   const validate = () => {
-    if (!form.userName.trim()) {
+    if (!form.usrNm.trim()) {
       alert("이름을 입력해주세요.");
       return false;
     }
-    if (!form.userId.trim()) {
+    if (!form.lgnId.trim()) {
       alert("아이디를 입력해주세요.");
       return false;
     }
-    if (form.password !== form.confirmPassword) {
+    if (form.pwd !== form.confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return false;
     }
@@ -73,7 +74,7 @@ function RegisterPage() {
 	  try {
 		  
 	    const res = await axios.post("/api/join/selectIdDupCheck", {
-	      email: form.userId
+	      lgnId: form.lgnId
 	    });
 	    if(res.data.result === 'S') {
 		  if(res.data.idDupCheck === 'D') {
@@ -132,11 +133,24 @@ function RegisterPage() {
     }
 
     try {
-      await axios.post("/api/register", form);
-      alert("회원가입 완료!");
+	  console.log(form.addressDetail);
+      const fullAddress = `${form.address} ${form.addressDetail}`.trim();
+	  const submitData = {
+         ...form,
+         address: fullAddress
+      };
+      const res = await axios.post("/api/join/saveUser", submitData);
+      if (res.data.result === "S") {
+        if (window.confirm("회원가입이 완료되었습니다.\n관리자의 승인을 기다려 주십시오.\n로그인 화면으로 이동하시겠습니까?")) {
+        // 로그인 페이지로 이동
+         window.location.href = "/login";  // 라우팅 방식에 따라 수정 가능
+        }
+      } else {
+        alert("회원가입에 실패했습니다. ");
+      }
       // navigate('/login');
     } catch (err) {
-      alert("회원가입 실패: " + err.response?.data?.message);
+      alert("회원가입에 실패했습니다.  " + err.response?.data?.message);
     }
   };
   const openDaumPostcode = () => {
@@ -168,22 +182,22 @@ function RegisterPage() {
 	      <tr>
 	        <th><span className="required">*</span>이름</th>
 	        <td>
-	          <input name="userName" value={form.userName} onChange={handleChange} />
-	          {errors.userName && <p className="error">{errors.userName}</p>}
+	          <input name="usrNm" value={form.usrNm} onChange={handleChange} />
+	          {errors.usrNm && <p className="error">{errors.usrNm}</p>}
 	        </td>
 
 	        <th><span className="required">*</span>아이디</th>
 	        <td>
-	          <input name="userId" value={form.userId} disabled={idVerified} onChange={handleChange} />
+	          <input name="lgnId" maxLength={7} value={form.lgnId} disabled={idVerified} onChange={handleChange} />
 	          <button type="button" onClick={checkDupId} disabled={idVerified}>{idVerified ? "중복확인 완료" : "중복확인"}</button>
-	          {errors.userId && <p className="error">{errors.userId}</p>}
+	          {errors.lgnId && <p className="error">{errors.lgnId}</p>}
 	        </td>
 	      </tr>
 	      <tr>
 	        <th><span className="required">*</span>비밀번호</th>
 	        <td>
-	          <input type="password" name="password" value={form.password} onChange={handleChange} />
-	          {errors.password && <p className="error">{errors.password}</p>}
+	          <input type="password" name="pwd" value={form.pwd} onChange={handleChange} />
+	          {errors.pwd && <p className="error">{errors.pwd}</p>}
 	        </td>
 
 	        <th><span className="required">*</span>비밀번호 확인</th>
@@ -208,22 +222,22 @@ function RegisterPage() {
 	      <tr>
 	        <th><span className="required">*</span>휴대폰 번호<br/>(- 제외)</th>
 	        <td>
-	          <input name="phoneNumber"
-					  value={form.phoneNumber}
+	          <input name="phone"
+					  value={form.phone}
 					  onChange={(e) => {
 					    const onlyNums = e.target.value.replace(/[^0-9]/g, "");
-					    setForm((prev) => ({ ...prev, phoneNumber: onlyNums }));
+					    setForm((prev) => ({ ...prev, phone: onlyNums }));
 					  }}
 					  maxLength={11}
 					  placeholder="숫자만 입력하세요"
 					/>
 
-	          {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
+	          {errors.phone && <p className="error">{errors.phone}</p>}
 	        </td>
 
 	        <th><span className="required">*</span>관리자 유형</th>
 	        <td>
-	          <select name="roleType" value={form.roleType} onChange={handleChange}>
+	          <select name="roleTp" value={form.roleTp} onChange={handleChange}>
 			    <option value="">-- 선택하세요 --</option>
 			      <option value="SYSTEM_ADMIN">시스템관리자</option>
 			      <option value="ADMIN">일반관리자</option>
@@ -237,7 +251,7 @@ function RegisterPage() {
 	          <div className="address-group">
 	          	<input name="address" value={form.address} readOnly placeholder="주소를 검색해주세요."/>
 	          	<button type="button"  onClick={openDaumPostcode}>주소검색</button>
-	          	<input name="address" value={form.addressDetail} placeholder="상세주소를 입력해주세요."/>
+	          	<input name="addressDetail" value={form.addressDetail} onChange={handleChange} placeholder="상세주소를 입력해주세요."/>
 	          </div>
 	          {errors.address && <p className="error">{errors.address}</p>}
 	        </td>
