@@ -3,11 +3,23 @@ import axios from "axios";
 import "./Game.css";
 function Game() {
   const [games, setGames] = useState([]);
+  const [krGmeNm, prdCd]= useState([]);
 
   // API에서 데이터 가져오기
   useEffect(() => {
+	  const token = localStorage.getItem("jwt"); // 로그인 때 저장한 토큰
+	  console.log(token);
     axios
-      .get("http://localhost:8080/api/selectGameList")  // GET 요청
+      .post("/api/game/selectGameList",   {
+	    krGmeNm: '11',
+	    prdCd: 'prdCdSearch'
+	  },
+	  {
+	    headers: {
+	      Authorization: `Bearer ${token}`
+	    }
+	  }
+	  ) 
       .then((response) => {
         setGames(response.data); // 받아온 데이터를 상태에 저장
       })
@@ -19,10 +31,10 @@ function Game() {
   return (
     <div className="container">
       <h1>게임 관리</h1>
-      <div className="search-bar">
-        <input type="text" placeholder="코드/게임명" />
-        <input type="text" placeholder="회사 코드/회사명" />
-        <select>
+      <div className="search">
+        <input className="krGmeNm" type="text" placeholder="코드/게임명" />
+        <input className="prdCd" type="text" placeholder="회사 코드/회사명" />
+        <select className="useYn">
           <option>전체</option>
           <option>사용</option>
           <option>미사용</option>

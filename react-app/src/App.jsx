@@ -4,12 +4,14 @@ import axios from "axios";
 import "./App.css";
 import LoginPage from "./login/LoginPage.jsx";
 import RegisterPage from "./login/RegisterPage.jsx";
+import Game from "./game/Game.jsx"
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/game" element={<Game />} />
       </Routes>
     </Router>
   );
