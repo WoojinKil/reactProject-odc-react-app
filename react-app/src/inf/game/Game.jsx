@@ -10,6 +10,7 @@ function Game() {
   useEffect(() => {
 	 
 	 
+	 
   }, []);
   const fetchGames = () => {
   const token = localStorage.getItem("jwt"); // 로그인 때 저장한 토큰
