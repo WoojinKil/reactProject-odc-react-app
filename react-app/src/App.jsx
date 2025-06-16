@@ -4,7 +4,8 @@ import axios from "axios";
 import "./App.css";
 import LoginPage from "./login/LoginPage.jsx";
 import RegisterPage from "./login/RegisterPage.jsx";
-import Game from "./game/Game.jsx"
+import Game from "./inf/game/Game.jsx"
+import Rarity from "./inf/rarity/Rarity";
 function App() {
   return (
     <Router>
@@ -12,6 +13,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/game" element={<Game />} />
+        <Route path="/rarity" element={<Rarity
+         />} />
       </Routes>
     </Router>
   );
